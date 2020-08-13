@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+
+        <property name="workDirectory" value="/opt/ignite_work" />
+        <property name="cacheConfiguration">
+            <list>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="TestCache"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                </bean>
+            </list>
+        </property>
+        <!-- Enabling Apache Ignite Persistent Store. -->
+        <property name="dataStorageConfiguration">
+		  <bean class="org.apache.ignite.configuration.DataStorageConfiguration">
+			<!-- Redefining the default region's settings -->
+			<property name="defaultDataRegionConfiguration">
+			  <bean class="org.apache.ignite.configuration.DataRegionConfiguration">
+				<property name="name" value="Default_Region"/>
+				<!-- Setting the size of the default region to 50MB. -->
+				<property name="maxSize" value="#{50L * 1024 * 1024}"/>
+				<property name="persistenceEnabled" value="true"/>
+			  </bean>
+           </property>
+		  </bean>
+		</property>     
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <property name="ipFinder">
+					<bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+
+                        <property name="addresses">
+                            <list>
+                                <value>127.0.0.1:47500</value>
+                                <!-- <value>13.127.169.69:47500..47509</value> -->
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>
