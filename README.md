@@ -1,2 +1,2 @@
 # apache-ignite
-Container Setup files
+Cluster setup files
